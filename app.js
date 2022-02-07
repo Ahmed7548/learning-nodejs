@@ -1,17 +1,32 @@
-const http = require("http"); 
+// const http = require("http"); 
+
 
 const express = require("express")
 
+const path = require("path")
+const routPath= require("./utils/path")
+
+const adminData = require("./routes/admin")
+const shopRoutes= require("./routes/shop")
+
 const app = express();
- 
-app.use((req,res,next) => {
-    console.log("in the middleWare")
-    next()// allows the request to continue to the next middleware
-})
-app.use((req,res,next) => {
-    console.log("in the 2nd middleWare")
-    next()
+
+
+
+app.set("view engine", "pug")
+app.set("views", "views") //tells express the directory of templating engine
+
+app.use(express.urlencoded({ extended: true }))
+
+app.use(express.static(path.join(__dirname,"public")))
+app.use("/admin",adminData.Router)
+app.use("/shop",shopRoutes)
+
+
+app.use((req,res , next) => {
+    res.status(404).sendFile(path.join(routPath,"views","not-found.html")) 
 })
 
-const server=http.createServer(app);
-server.listen(8000)
+app.listen(8000, () => {
+    console.log("listening on port 8000")
+})

@@ -1,0 +1,30 @@
+<%- include("./includes/head.ejs") %>
+<body>
+    <%- include("./includes/navigation.ejs") %> 
+</header>
+		<main class="main">
+            <% if(products.length!==0) {%>
+            <div class="grid">
+                <% products.forEach(product => { %>
+                    <div class="card">
+                        <header class="card__header">
+                            <h3 class="product__title"><%= product.title %></h3>
+                        </header>
+                            <div class="card__image">
+                                <img src="https://media.gq.com/photos/5ad64204c8be07604e8b5f2f/1:1/w_1332,h_1332,c_limit/21-books-GQ-April-2018-041718-3x2.jpg" alt="book">
+                            </div>
+                            <div class="card__content">
+                                <h4 class="product__price">$22</h4>
+                                <p class="product__describtion">a very very good book</p>
+                            </div>
+                            <div class="card__action">
+                                <button class="btn">Add to cart</button>
+                            </div>
+                    </div>
+                <% }); %>
+            </div>
+            <%} else {%>
+                <h2>no product here</h2>
+                <% }%>
+		</main>
+        <%- include("./includes/end.ejs") %> 

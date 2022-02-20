@@ -2,10 +2,15 @@
     <nav class="main-header__nav">
         <ul class="main-header__item-list">
             <li class="main-header__item">
-						<a href="/shop" class=<%= path==="shop"?"active":null %> >shop</a>
+                <a href="/shop/products" class=<%= locals.path?(path==="products"?"active":null):null %> >products</a>
+            </li> <li class="main-header__item">
+						<a href="/shop/cart" class=<%= locals.path?(path==="cart"?"active":null):null %> >Cart</a>
             </li>
             <li class="main-header__item">
-                <a href="/admin/add-product" class=<%= path==="add-product"?"active":null %> >Add Product</a>
+                <a href="/admin/admin-products" class=<%= locals.path?(path==="admin-products"?"active":null):null %> >Admin products</a>
+            </li>
+            <li class="main-header__item">
+                <a href="/admin/add-product" class=<%= locals.path? (path==="add-product"?"active":null):null %> >Add Product</a>
             </li>
         </ul>
     </nav>

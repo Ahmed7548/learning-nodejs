@@ -1,15 +1,16 @@
 const express = require("express");
-
-const path = require("path");
-const routPath = require("../utils/path");
-
 const Router = express.Router();
-const { products } = require("../routes/admin");
+const {displayCart,displayProducts,indexPage,getUserProductDetail}=require("../controllers/shop-product-handlers")
+const {postProductToCart,updateProductsInData,deleteProduct}=require("../controllers/cartLogic")
 
-Router.get("/", (req, res, next) => {
-	console.log(products);
-	// res.sendFile(path.join(routPath, "views", "shop.pug"))
-	res.render("shop", { products, docTitle: " My shop", path: "shop" });
-});
 
-module.exports = Router;
+Router.get("/",indexPage)
+Router.get("/products", displayProducts);
+Router.get("/cart", displayCart)
+Router.get("/product-detail/:id",getUserProductDetail)
+Router.post("/products/addToCart", postProductToCart)
+Router.post("/products/updateCart", updateProductsInData)
+Router.post("/products/updateCart/delete",deleteProduct)
+Router.get("/orders/:userId",)
+
+module.exports = Router;    

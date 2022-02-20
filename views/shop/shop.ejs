@@ -1,0 +1,31 @@
+<%- include("../includes/head.ejs") %>
+<body>
+    <%- include("../includes/navigation.ejs") %> 
+</header>
+		<main class="main">
+            <% if(products.length!==0) {%>
+            <div class="grid">
+                <% products.forEach(product => { %>
+                    <div class="card" data-id=<%= product.id %> >
+                        <header class="card__header">
+                            <h3 class="product__title"><%= product.title %></h3>
+                        </header>
+                            <div class="card__image">
+                                <img src=<%= product.url %>  alt="book">
+                            </div>
+                            <div class="card__content">
+                                <h4 class="product__price">$<%= product.price %> </h4>
+                                <p class="product__describtion"><%= product.describtion %> </p>
+                            </div>
+                            <div class="card__action">
+                                <button class="btn primary" data-id=<%= product.id %>  >Add to cart</button>
+                            </div>
+                    </div>
+                <% }); %>
+            </div>
+            <%} else {%>
+                <h2>no product here</h2>
+                <% }%>
+		</main>
+        <script src='/js/add-to-cart.js'></script>
+<%- include("../includes/end.ejs") %> 

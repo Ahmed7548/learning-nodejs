@@ -1,0 +1,53 @@
+<%- include("../includes/head.ejs") %>
+<body>
+    <%- include("../includes/navigation.ejs") %> 
+</header>
+		<main class="main main__edit">
+            <div class="edit__form__container">
+			<form action=<%=`/admin/edit-product/${product.id}`%>  method="post" class="product-form">
+                <div class="form-control">
+                	<label for="title">Title</label>
+					<input type="text" name="title" id="title"  placeholder="Your product title" value="<%= product.title%>"  required/>
+            	</div>
+				<div class="form-control">
+                	<label for="image_url">image url</label>
+					<input type="text" name="image_url" id="image_url" placeholder="Add a image url" value="<%= product.url %>" required/>
+            	</div>
+				<div class="form-control">
+                	<label for="describtion">Describtion</label>
+					<textarea type="text" name="describtion" id="describtion" placeholder="A brief describtion of the product" rows="5"  required><%= product.describtion %></textarea>
+            	</div>
+				<div class="form-control form-control__number">
+                	<label for="price">price</label>
+					<input type="number" name="price" id="price" placeholder="Price$" value=<%= product.price %> required/>
+            	</div>
+				<button class="secondary" type="submit">Submit changes</button>
+			</form>
+        </div>
+        <div class="preview__container">
+            <div class="card" data-id=<%= product.id %> >
+                <header class="card__header">
+                    <h3 class="product__title"><%= product.title %></h3>
+                </header>
+                    <div class="card__image">
+                        <img src=<%= product.url %>  alt="book">
+                    </div>
+                    <div class="card__content">
+                        <h4 class="product__price">$<%= product.price %> </h4>
+                        <p class="product__describtion"><%= product.describtion %> </p>
+                    </div>
+                    <div class="card__action">
+                        <button class="btn primary" data-id=<%= product.id %>  disapled=true>Add to cart</button>
+                    </div>
+            </div>
+        </div>
+		</main>
+        <script src="/js/edit-product-logic.js"></script>
+		<%- include("../includes/end.ejs") %> 
+
+
+
+
+
+
+

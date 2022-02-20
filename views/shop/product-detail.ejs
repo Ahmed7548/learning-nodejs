@@ -1,0 +1,22 @@
+<%- include("../includes/head.ejs") %>
+<body>
+    <%- include("../includes/navigation.ejs") %> 
+</header>
+    <main class="main main__product_detail">
+        <div class="product__detail__left">
+            <div class="img__container">
+                <img src=<%= product.url %>  alt="book">
+            </div>
+            <h3 class="product__name">
+                <%= product.title %> 
+            </h3>
+        </div> 
+        <div class="product__detail__right">
+            <p class="product__description">
+              <%= product.describtion %> 
+            </p>
+            <button type="button" class="primary" id="add-to-cart" data-id=<%= product.id%>>add to cart</button>
+        </div>
+    </main>
+        <script src="/js/product-detail-logic.js"></script>
+    <%- include("../includes/end.ejs") %> 

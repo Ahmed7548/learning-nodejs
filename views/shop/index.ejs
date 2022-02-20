@@ -1,12 +1,12 @@
-<%- include("./includes/head.ejs") %>
+<%- include("../includes/head.ejs") %>
 <body>
-    <%- include("./includes/navigation.ejs") %> 
+    <%- include("../includes/navigation.ejs") %> 
 </header>
 		<main class="main">
             <% if(products.length!==0) {%>
             <div class="grid">
                 <% products.forEach(product => { %>
-                    <div class="card">
+                    <div class="card" data-id=<%= product.id %> >
                         <header class="card__header">
                             <h3 class="product__title"><%= product.title %></h3>
                         </header>
@@ -14,11 +14,11 @@
                                 <img src="https://media.gq.com/photos/5ad64204c8be07604e8b5f2f/1:1/w_1332,h_1332,c_limit/21-books-GQ-April-2018-041718-3x2.jpg" alt="book">
                             </div>
                             <div class="card__content">
-                                <h4 class="product__price">$22</h4>
-                                <p class="product__describtion">a very very good book</p>
+                                <h4 class="product__price">$<%= product.price %> </h4>
+                                <p class="product__describtion"><%= product.describtion %> </p>
                             </div>
                             <div class="card__action">
-                                <button class="btn">Add to cart</button>
+                                <button class="btn" data-id=<%= product.id %>  >Add to cart</button>
                             </div>
                     </div>
                 <% }); %>
@@ -27,4 +27,5 @@
                 <h2>no product here</h2>
                 <% }%>
 		</main>
-        <%- include("./includes/end.ejs") %> 
+        <script src='/js/add-to-cart.js'></script>
+<%- include("../includes/end.ejs") %> 

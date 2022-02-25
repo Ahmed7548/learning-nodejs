@@ -3,21 +3,16 @@
 const express = require("express");
 
 const path = require("path");
-const dp=require("./utils/data-base")
-
-const adminData = require("./routes/admin");
+const sequelize = require("./utils/data-base")
+const Product = require("./models/product-data")
+const User= require("./models/user")
+const adminRouter = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
-dp.execute("select * from products").then(result => {
-	console.log(result)
-}).catch(err => {
-	console.log(err)
-})
+
 
 
 const app = express();
-const {errorController}= require("./controllers/errorPage-contraoller");
-const res = require("express/lib/response");
 
 app.set("view engine", "ejs");
 app.set("views", "views"); //tells express the directory of templating engine
@@ -26,12 +21,37 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json({type:"application/json"}))
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/admin", adminData.Router);
+//middle ware here must be before our routes so that it apply to them --order matters
+app.use((req, res, next) => {
+	User.findByPk(1).then(user => {
+		console.log(user,"user exist")
+		req.user=user
+		next()
+	}).catch(err => { console.log(err) })
+})
+app.use("/admin", adminRouter);
 app.use("/shop", shopRoutes);
 
-app.use(errorController);
 
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" })
+User.hasMany(Product)
 
-app.listen(8000, () => {
-	console.log("listening on port 8000");
-});
+sequelize.sync().then(result => {
+	return User.findByPk(1)
+	}).then(user => {
+		if (user) {
+			return user
+		} else {
+			return User.create({
+				userName: "Ahmed",
+				email: "test@test.com"
+			})
+		}
+	}).then((user) => {
+		console.log(user,"user")
+		app.listen(8000, () => {
+			console.log("listening on port 8000");
+		})
+	}).catch(err => {
+	console.log(err)
+})

@@ -3,7 +3,8 @@ const path = require("path");
 const rootPath = require("../utils/path");
 const CartProduct = require("../models/cart-data");
 const productPath = path.join(rootPath, "data", "products.json");
-const cartPath= path.join(rootPath,"data","cart.json")
+const cartPath = path.join(rootPath, "data", "cart.json")
+const {getProductDetail}= require("./shared-handlers")
 
 
 const uid = () => {
@@ -12,13 +13,14 @@ const uid = () => {
 		 + Date.now().toString(16).slice(4);
 }
 
-const getProductDetail = (view,styles,docTitle)=> {
-	return (req, res, next) => {
-		Product.getsingleProduct(req.params.id, (product) => {
-			res.render(view,{styles:styles,product:product,docTitle:docTitle})
-		})
-	}
-}
+// const getProductDetail = (view,styles,docTitle)=> {
+// 	return (req, res, next) => {
+// 		Product.getsingleProduct(req.params.id).then(([row,fieldData]) => {
+// 			res.render(view, { styles: styles, product: row[0], docTitle: docTitle })
+// 			console.log(row,"from row")
+// 		})
+// 	}
+// }
 
 exports.getUserProductDetail= getProductDetail("shop/product-detail", ["/css/product-detail.css"],"product detail")
 
@@ -27,27 +29,27 @@ exports.getUserProductDetail= getProductDetail("shop/product-detail", ["/css/pro
 
 
 exports.displayProducts =  (req, res, next) => {
-	Product.fetchAll(productPath,(products) => {
-		res.render("shop/shop", {
-			products,
+	Product.findAll().then(products => {
+		res.render("shop/index", {
+			products:products,
 			docTitle: " My shop",
 			path: "products",
 		});
-	});
+	}).catch(err=>console.log(err))
 };
 
 exports.indexPage= (req, res, next) => {
-	Product.fetchAll(productPath,(products) => {
+	Product.findAll().then(products => {
 		res.render("shop/index", {
-			products,
+			products:products,
 			docTitle: " My shop",
 			path: "products",
 		});
-	});
+	}).catch(err=>console.log(err))
 };
 
 exports.displayCart = (req, res, next) => {
-	CartProduct.fetchAll(cartPath, (cart) => {	
+	CartProduct.fetchAll( (cart) => {	
 		console.log(cart)
 		console.log(cart.cartProducts,"hererer")
 		res.render("shop/cart", {
@@ -57,6 +59,8 @@ exports.displayCart = (req, res, next) => {
 			docTitle: "Cart",
 			styles:[ "/css/cart.css"],
 		});
+	}).then(([rows, fieldData])=> {
+		
 	})
 };
 

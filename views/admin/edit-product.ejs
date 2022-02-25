@@ -11,7 +11,7 @@
             	</div>
 				<div class="form-control">
                 	<label for="image_url">image url</label>
-					<input type="text" name="image_url" id="image_url" placeholder="Add a image url" value="<%= product.url %>" required/>
+					<input type="text" name="image_url" id="image_url" placeholder="Add a image url" value="<%= product.img_URL %>" required/>
             	</div>
 				<div class="form-control">
                 	<label for="describtion">Describtion</label>
@@ -30,7 +30,7 @@
                     <h3 class="product__title"><%= product.title %></h3>
                 </header>
                     <div class="card__image">
-                        <img src=<%= product.url %>  alt="book">
+                        <img src=<%= product.img_URL %>  alt="book">
                     </div>
                     <div class="card__content">
                         <h4 class="product__price">$<%= product.price %> </h4>

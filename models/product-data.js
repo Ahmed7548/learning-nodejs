@@ -4,9 +4,6 @@
 // const {getDataFromFile,writeToFile}=require("../utils/helpers");
 // const db=require("../utils/data-base");
 
-
-    
-
 // module.exports = class product {
 // 	constructor(title,price,id,describtion,url) {
 //         this.title = title;
@@ -33,40 +30,39 @@
 //         SET title = ?, price = ?, describtion = ?, img_URL=?
 //         WHERE id=?;`,[edittedProduct.title,edittedProduct.price,edittedProduct.describtion,edittedProduct.url,id])
 //     }
-    
+
 //     static deleteProduct(id) {
 //        return db.execute("DELETE FROM products WHERE id=?",[id])
 //     }
 // };
 
-const Sequelize = require("sequelize")
+const Sequelize = require("sequelize");
 
-const sequelize = require("../utils/data-base")
-
+const sequelize = require("../utils/data-base");
 
 const Product = sequelize.define("Product", {
-    id: {
-        type: Sequelize.STRING,
-        primaryKey:true,
-        allowNull: false,
-        unique:true
-    },
-    title: {
-        type: Sequelize.STRING,
-        allowNull:false,
-    },
-    price: {
-        type: Sequelize.DOUBLE,
-        allowNull:false
-    },
-    describtion: {
-        type: Sequelize.STRING,
-        allowNull:false
-    },
-    img_URL: {
-        type: Sequelize.STRING,
-        allowNull:false
-    }
-})
+	id: {
+		type: Sequelize.STRING,
+		primaryKey: true,
+		allowNull: false,
+		unique: true,
+	},
+	title: {
+		type: Sequelize.STRING,
+		allowNull: false,
+	},
+	price: {
+		type: Sequelize.DOUBLE,
+		allowNull: false,
+	},
+	describtion: {
+		type: Sequelize.STRING,
+		allowNull: false,
+	},
+	img_URL: {
+		type: Sequelize.STRING,
+		allowNull: false,
+	},
+});
 
-module.exports=Product
+module.exports = Product;

@@ -45,7 +45,7 @@ const Product = sequelize.define("Product", {
 		type: Sequelize.STRING,
 		primaryKey: true,
 		allowNull: false,
-		unique: true,
+		// autoIncrement: true,
 	},
 	title: {
 		type: Sequelize.STRING,

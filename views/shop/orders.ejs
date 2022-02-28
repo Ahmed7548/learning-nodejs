@@ -2,5 +2,25 @@
 <body>
     <%- include("../includes/navigation.ejs") %> 
 </header>
+<main>
+    <% if (locals.orders) { %>
+        <% if (orders.length<=0) { %>
+         <h2>Nothing here</h2>
+        <% }else{%>
+            <ul>
+        <% orders.forEach(order => { %>
+            <li>
+                <%= order.id %> 
+                <ul>
+                <% order.Products.forEach(product => { %>
+                    <li><%= product.title %> (<%= product.OrderItem.quantity %> ) </li>
+                <% }) %>
+            </ul>
+            </li>
+        <% }) %>
+        </ul>
+        <% } %> 
+    <% } %>
+</main>
 
 <%- include("../includes/end.ejs") %> 

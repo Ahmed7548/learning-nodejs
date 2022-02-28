@@ -1,52 +1,83 @@
-const path = require("path");
-const rootPath = require("../utils/path");
-const cartPath = path.join(rootPath, "data", "cart.json");
-const productPath = path.join(rootPath, "data", "products.json");
-const CartProduct = require("../models/cart-data");
-// const { getDataFromFile, writeToFile } = require("../utils/helpers");
-
-// const addToCart = (id) => {
-//     getDataFromFile(cartPath, (cartProducts) => {
-//         //find the product in returned arr
-//         const existedCardProductIndex = cartProducts.findIndex((product) => product.id == id);
-// 		const existedCardProduct=cartProducts[existedCardProductIndex]
-//         if (existedCardProduct) {
-//             //if there update amount
-// 			CartProduct.incrementAmount(existedCardProductIndex, cartProducts);
-// 			console.log(existedCardProduct, "existedCArtProduct");
-//         } else {
-//             //else add new to cart
-// 			getDataFromFile(productPath, (products) => {
-// 				const product = products.find((prod) => prod.id === id);
-// 				console.log(product, "product from products");
-// 				const newCartProduct = new CartProduct(
-// 					product.title,
-// 					product.price,
-// 					product.id,
-// 					product.describtion
-// 				);
-// 				newCartProduct.save(cartPath);
-// 				console.log(newCartProduct, "newcartProduct");
-// 			});
-// 		}
-// 	});
-// };
-
+const Product = require("../models/product-data");
+const CartItem = require("../models/cart-item");
 
 exports.postProductToCart = (req, res, next) => {
-    CartProduct.addToCart(req.body.id);
-    res.status(200).json({"status":200})
+	const user = req.user;
+	let fethcedCart;
+	let newQuantity = 1;
+	user
+		.getCart()
+		.then((cart) => {
+			fethcedCart = cart;
+			return cart.getProducts({
+				where: {
+					id: req.body.id,
+				},
+			});
+		})
+		.then((products) => {
+			let product;
+
+			if (products.length) {
+				product = products[0];
+				const OldQuantuity = product.CartItem.quantity;
+				newQuantity = OldQuantuity + 1;
+				return product;
+			} else {
+				return Product.findByPk(req.body.id);
+			}
+		})
+		.then((product) => {
+			fethcedCart.addProduct(product, {
+				through: {
+					quantity: newQuantity,
+				},
+			});
+		})
+		.then((_) => {
+			res.status(200).json({ status: 200 });
+		});
 };
 
-exports.updateProductsInData = (req,res,next) => {
-    console.log(req.body)
-    CartProduct.updateAmount(req.body);
-	res.status(200).json({"status":200})
-}
+exports.updateProductsInData = (req, res, next) => {
+	(async () => {
+		const cart = await req.user.getCart();
+		const cartItems = await CartItem.findAll({
+			where: {
+				CartId: cart.id,
+			},
+		});
+		for (let key in req.body) {
+			const id = key;
+			const amount = req.body[key];
+			try {
+				const cartItem = await cartItems.find((item) => item.ProductId === id);
+				await cartItem.update({ quantity: amount });
+			} catch (err) {
+				console.log(err);
+			}
+		}
+		res.status(200).json({ status: 200 });
+	})();
+};
 
 exports.deleteProduct = (req, res, next) => {
-    const id = req.body.id
-    console.log(id,"from delete product")
-    CartProduct.deletecartProduct(id)
-	res.status(200).json({"status":200})
-}
+	const user = req.user;
+	const id = req.body.id;
+
+	(async () => {
+		const cart = await user.getCart();
+		const products = await cart.getProducts({
+			where: {
+				id: id,
+			},
+		});
+		const product = products[0];
+		cart.removeProduct(product);
+		try {
+			res.status(200).json({ status: 200 });
+		} catch (err) {
+			console.log(err);
+		}
+	})();
+};

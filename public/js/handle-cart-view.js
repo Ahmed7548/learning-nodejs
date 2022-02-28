@@ -7,28 +7,25 @@ const removeButton = document.querySelectorAll(
 const closeButton = document.getElementById("close");
 const checkout = document.getElementById("check-out");
 
-const productsContainer = document.getElementById("products-container")
+const productsContainer = document.getElementById("products-container");
 
-const totalPriceView=document.getElementById("total-price")
-
+const totalPriceView = document.getElementById("total-price");
 
 const updateTotalPrice = () => {
 	const numInputs = document.querySelectorAll(
 		".cart__amount__input__container input"
 	);
-	let totalPrice=0
-	numInputs.forEach(numInput => {
-		const price = +numInput.dataset.price
-		const amount= +numInput.value
-		totalPrice+= amount*price
-	})
-	totalPriceView.innerText= `$${totalPrice}`
-}
-
-
+	let totalPrice = 0;
+	numInputs.forEach((numInput) => {
+		const price = +numInput.dataset.price;
+		const amount = +numInput.value;
+		totalPrice += amount * price;
+	});
+	totalPriceView.innerText = `$${totalPrice}`;
+};
 
 const removeFromCart = (e) => {
-    const id = e.target.dataset.id;
+	const id = e.target.dataset.id;
 	const fetchData = async () => {
 		const response = await fetch("/shop/products/updateCart/delete", {
 			method: "POST",
@@ -38,16 +35,16 @@ const removeFromCart = (e) => {
 			body: JSON.stringify({ id }),
 		});
 		try {
-            if (response.ok) {
-                //remove the node from the UI
-                const parent=document.getElementById(`cart${id} `)
-                parent.remove();
-                //check if all prodcuts is deleted 
-                if (!productsContainer.firstElementChild) {
-                    productsContainer.innerHTML=`<h3>no products added</h3>`
+			if (response.ok) {
+				//remove the node from the UI
+				const parent = document.getElementById(`cart${id} `);
+				parent.remove();
+				//check if all prodcuts is deleted
+				if (!productsContainer.firstElementChild) {
+					productsContainer.innerHTML = `<h3>no products added</h3>`;
 				}
 				//
-				updateTotalPrice()
+				updateTotalPrice();
 			} else {
 				throw new Error(
 					"something went wrong and couldn't remove product from cart"
@@ -95,22 +92,40 @@ closeButton.addEventListener("click", () => {
 });
 
 checkout.addEventListener("click", () => {
-	updateCart("/shop/checkout");
+	(async () => {
+		await fetch("/shop/add-order", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		try {
+			// if (response.ok) {
+			// updateCart("/shop/products");
+			// } else {
+			// 	throw new Error("there hase ben an error");
+			// }
+			location.assign("/shop/orders")
+			console.log("herer");
+		} catch (e) {
+			console.log(e);
+		}
+	})();
 });
 
 numInputs.forEach((input) => {
 	input.addEventListener("keyup", (e) => {
-		controlValue(e)
-		updateTotalPrice()
+		controlValue(e);
+		updateTotalPrice();
 	});
 	input.addEventListener("click", (e) => {
-		controlValue(e)
-		updateTotalPrice()
+		controlValue(e);
+		updateTotalPrice();
 	});
 });
 
 removeButton.forEach((button) => {
 	button.addEventListener("click", (e) => {
-		removeFromCart(e)
+		removeFromCart(e);
 	});
 });

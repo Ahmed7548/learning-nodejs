@@ -13,7 +13,7 @@
                         <p class="card__product__price"><%= product.price %> </p>
                     </div>
                     <div class="cart__amount__input__container">
-                        <input type="number" name=<%=`amount__${product.id}`%> data-id=<%= product.id %> data-price=<%= product.price %>   value=<%= product.amount %> min=1 >
+                        <input type="number" name=<%=`amount__${product.id}`%> data-id=<%= product.id %> data-price=<%= product.price %>   value=<%= product.CartItem.quantity %> min=1 >
                         <button class="remove" type="button" data-id=<%= product.id %>>x</button>
                     </div>  
                 </div>
@@ -24,7 +24,7 @@
             <% } %> 
             <div class="total-price">
                 <h4>total</h4>
-                <p id="total-price"><%= totalPrice %> </p>
+                <!-- <p id="total-price"></p> -->
             </div>
         <div class="cart__checkout">
             <button class="primary" id="check-out">

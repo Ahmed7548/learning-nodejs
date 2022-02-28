@@ -27,7 +27,6 @@ exports.getAdminProdctDetail = getProductDetail(
 
 exports.postAddedProduct = (req, res, next) => {
 	const { title, describtion, price, image_url } = req.body;
-	console.log(req.user, "user");
 	req.user
 		.createProduct({
 			id: uid(),
@@ -37,7 +36,6 @@ exports.postAddedProduct = (req, res, next) => {
 			price: price,
 		})
 		.then(() => {
-			console.log("added product to the database");
 			res.redirect("/admin/admin-products");
 		})
 		.catch((err) => {

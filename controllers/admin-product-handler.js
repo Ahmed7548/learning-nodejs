@@ -1,15 +1,5 @@
 const Product = require("../models/product-data");
-const path = require("path");
-const rootPath = require("../utils/path");
 const { getProductDetail } = require("./shared-handlers");
-
-const uid = () => {
-	return (
-		String.fromCharCode(Math.floor(Math.random() * 26) + 97) +
-		Math.random().toString(16).slice(2) +
-		Date.now().toString(16).slice(4)
-	);
-};
 
 exports.getAddProduct = (req, res, next) => {
 	res.render("admin/add-product", {
@@ -26,41 +16,24 @@ exports.getAdminProdctDetail = getProductDetail(
 );
 
 exports.postAddedProduct = (req, res, next) => {
+	const user= req.user
 	const { title, describtion, price, image_url } = req.body;
-	req.user
-		.createProduct({
-			id: uid(),
-			title: title,
-			describtion: describtion,
-			img_URL: image_url,
-			price: price,
-		})
+	const product = new Product(title, price, describtion, image_url,user._id)
+		product.save()
 		.then(() => {
 			res.redirect("/admin/admin-products");
 		})
 		.catch((err) => {
-			console.log(err);
+			console.log(err,"hehe");
 		});
 };
 
 exports.postEdittedProduct = (req, res, next) => {
 	console.log(req.body);
 	const { title, price, describtion, image_url } = req.body;
+	const updatedProduct= new Product(title,price,describtion,image_url)
 	const id = req.params.id;
-	Product.update(
-		{
-			price: price,
-			title: title,
-			describtion: describtion,
-			img_URL: image_url,
-		},
-		{
-			where: {
-				id: id,
-				UserId:req.user.id
-			},
-		}
-	)
+	updatedProduct.UpdateProduct(id)
 		.then((result) => {
 			console.log(result);
 			res.redirect("/admin/admin-products");
@@ -72,22 +45,16 @@ exports.postEdittedProduct = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
 	const id = req.body.id;
-	Product.destroy({
-		where: {
-			id: id,
-			UserId:req.user.id
-		},
-	}).then((result) => {
+	Product.deleteProduct(id).then((result) => {
 		console.log(result);
 		res.status(200).json({ status: 200 });
+	}).catch(err => {
+		console.log(err)
 	});
 };
 
 exports.displayAdminProducts = (req, res, next) => {
-	Product.findAll({
-		where: {
-		UserId:req.user.id
-	}}).then((products) => {
+	Product._getAllProducts().then((products) => {
 		res.render("admin/product", {
 			products: products,
 			docTitle: "Admin products",

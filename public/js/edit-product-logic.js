@@ -29,5 +29,12 @@ priceInput.addEventListener("keyup", (e) => {
 
 imageUrlInput.addEventListener("keyup", (e) => {
     console.log(e.target.value)
-    imagePreview.src=e.target.value
+    imagePreview.src=(() => {
+        try {
+            const _url = new URL(e.target.value)
+            return _url
+        } catch{
+            return null
+        }}
+    )()
 })

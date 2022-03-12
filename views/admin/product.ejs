@@ -6,7 +6,7 @@
             <% if(products.length!==0) {%>
             <div class="grid">
                 <% products.forEach(product => { %>
-                    <div class="card" data-id=<%= product.id %> >
+                    <div class="card" data-id=<%= product._id %> >
                         <header class="card__header">
                             <h3 class="product__title"><%= product.title %></h3>
                         </header>
@@ -15,11 +15,11 @@
                             </div>
                             <div class="card__content">
                                 <h4 class="product__price">$<%= product.price %> </h4>
-                                <p class="product__describtion"><%= product.describtion %> </p>
+                                <p class="product__describtion"><%= product.description %> </p>
                             </div>
                             <div class="card__action">
-                                <a href=<%=`/admin/edit-product/${product.id}`  %>  class="btn primary" data-id=<%= product.id %>  >Edit product</a>
-                                <button class="btn secondary" data-id=<%= product.id %>>Delete product</button> 
+                                <a href=<%=`/admin/edit-product/${product._id}`  %>  class="btn primary" data-id=<%= product._id %>  >Edit product</a>
+                                <button class="btn secondary" data-id=<%= product._id %>>Delete product</button> 
                             </div>
                     </div>
                 <% }); %>

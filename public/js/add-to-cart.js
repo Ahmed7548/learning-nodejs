@@ -33,3 +33,9 @@ products.forEach(product => {
         goProductDetail(e,product)
     })
 })
+
+
+const giveUrl = (url) => {
+    
+}
+

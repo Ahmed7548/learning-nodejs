@@ -1,79 +1,43 @@
-const Product = require("../models/product-data");
-const CartItem = require("../models/cart-item");
+// const Product = require("../models/product-data");
+// const CartItem = require("../models/cart-item");
+const User= require("../models/user")
 
 exports.postProductToCart = (req, res, next) => {
 	const user = req.user;
-	let fethcedCart;
-	let newQuantity = 1;
-	user
-		.getCart()
-		.then((cart) => {
-			fethcedCart = cart;
-			return cart.getProducts({
-				where: {
-					id: req.body.id,
-				},
-			});
-		})
-		.then((products) => {
-			let product;
-
-			if (products.length) {
-				product = products[0];
-				const OldQuantuity = product.CartItem.quantity;
-				newQuantity = OldQuantuity + 1;
-				return product;
-			} else {
-				return Product.findByPk(req.body.id);
-			}
-		})
-		.then((product) => {
-			fethcedCart.addProduct(product, {
-				through: {
-					quantity: newQuantity,
-				},
-			});
-		})
-		.then((_) => {
-			res.status(200).json({ status: 200 });
-		});
+	console.log(user instanceof User)
+	const {id}=req.body
+	console.log(id)
+	user.addtoCart(id).then(_ => {
+		res.status(200).json({ status: 200 });
+	}).catch(err => {
+		console.log(err)
+	})
 };
 
 exports.updateProductsInData = (req, res, next) => {
 	(async () => {
-		const cart = await req.user.getCart();
-		const cartItems = await CartItem.findAll({
-			where: {
-				CartId: cart.id,
-			},
-		});
-		for (let key in req.body) {
-			const id = key;
-			const amount = req.body[key];
-			try {
-				const cartItem = await cartItems.find((item) => item.ProductId === id);
-				await cartItem.update({ quantity: amount });
-			} catch (err) {
-				console.log(err);
-			}
+			await req.user.updatedCart(req.body)
+		try {
+			res.status(200).json({ status: 200 });
+		} catch (err) {
+			console.log(err);
 		}
-		res.status(200).json({ status: 200 });
 	})();
 };
 
 exports.deleteProduct = (req, res, next) => {
-	const user = req.user;
+	const cart = req.user.cart;
 	const id = req.body.id;
+	const deletedItems = cart.items.find(item => item._id.toHexString() === id)
+	const deletedProductTotalPrice = (+deletedItems.price) * (+deletedItems.qty);
+
+
+	console.log(deletedItems, "deleteditem"); 
+	console.log(deletedProductTotalPrice, "sdasdsadasdas");
+	
 
 	(async () => {
-		const cart = await user.getCart();
-		const products = await cart.getProducts({
-			where: {
-				id: id,
-			},
-		});
-		const product = products[0];
-		cart.removeProduct(product);
+		await User.deleteProductFromCart(id,req.user._id,deletedProductTotalPrice)
 		try {
 			res.status(200).json({ status: 200 });
 		} catch (err) {

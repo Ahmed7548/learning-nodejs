@@ -1,0 +1,38 @@
+<%- include("../includes/head.ejs") %>
+<body>
+    <%- include("../includes/navigation.ejs") %> 
+</header>
+<main class="cart__main">
+    <h2 class="cart__header">Cart</h2>
+    <% if(locals.products&&products.length>0){%> 
+        <div class="cart__products__container" id="products-container">
+            <% products.forEach(product => { %>
+                <div class="cart__product__container" id="cart<%= product._id %> ">
+                    <div class="cart__product__detail">
+                        <h3><%= product.title %> </h1>
+                        <p class="card__product__price"><%= product.price %> </p>
+                    </div>
+                    <div class="cart__amount__input__container">
+                        <input type="number" name=<%=`amount__${product._id}`%> data-id=<%= product._id %> data-price=<%= product.price %>   value=<%= product.qty %> min=1 >
+                        <button class="remove" type="button" data-id=<%= product._id %>>x</button>
+                    </div>  
+                </div>
+            <% }) %>
+        </div>
+        <% }else { %> 
+                <h3>no products added</h3>
+            <% } %> 
+            <div class="total-price">
+                <h4>total</h4>
+                <p id="total-price">$<%= totalPrice %> </p>
+            </div>
+        <div class="cart__checkout">
+            <button class="primary" id="check-out">
+                Checkout
+            </button>
+            <button class="secondary" id="close">
+                close
+            </button>
+        </div>
+        <script src="/js/handle-cart-view.js"></script>
+    <%- include("../includes/end.ejs") %> 

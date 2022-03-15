@@ -1,0 +1,14 @@
+.main__edit{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.edit__form__container{
+    flex-basis: 400px;
+}
+
+.preview__container{
+    flex-basis: 300px;
+}

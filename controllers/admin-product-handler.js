@@ -21,10 +21,9 @@ exports.postAddedProduct = (req, res, next) => {
 	const product = new Product(title, price, describtion, image_url,user._id)
 		product.save()
 		.then(() => {
-			res.redirect("/admin/admin-products");
 		})
-		.catch((err) => {
-			console.log(err,"hehe");
+			.catch((err) => {
+			console.log(err)
 		});
 };
 
@@ -45,8 +44,7 @@ exports.postEdittedProduct = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
 	const id = req.body.id;
-	Product.deleteProduct(id).then((result) => {
-		console.log(result);
+	Product.deleteProduct(id).then(() => {
 		res.status(200).json({ status: 200 });
 	}).catch(err => {
 		console.log(err)
@@ -54,7 +52,7 @@ exports.postDeleteProduct = (req, res, next) => {
 };
 
 exports.displayAdminProducts = (req, res, next) => {
-	Product._getAllProducts().then((products) => {
+	Product.getAllProducts().then((products) => {
 		res.render("admin/product", {
 			products: products,
 			docTitle: "Admin products",

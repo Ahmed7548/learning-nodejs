@@ -7,7 +7,7 @@ class User {
 		this.userName = userName;
         this.email = email;
         this._id=_id
-		this.cart = cart; // {items:[{...product,qty}], totalPrice..}
+		this.cart = cart;
 	}
 
 	async save() {
@@ -17,10 +17,6 @@ class User {
 	}
 
 	async addtoCart(productId) {
-		// checks if the product are already in the cart
-		//add to the cart .... update qty
-		//update total price
-
 		const db = getDb();
 		const users = db.collection("users");
 		const product = await Product._getOneProduct(productId);
@@ -57,7 +53,6 @@ class User {
 				{ _id: new ObjectId(this._id) },
 				{
 					$push: {
-						// cart:{items:[...cart.items,{...product,qty:1}],totalPrice:updatedTotalPrice}
 						"cart.items": updatedProductInCart,
 					},
 					$set: {
@@ -88,7 +83,6 @@ class User {
 				cartItem.qty = +amount;
 				updatedCartItems.push(cartItem);
 				totalPrice += +amount * +cartItem.price;
-				// await cartItem.update({ quantity: amount });
 			}
 			console.log(
 				JSON.stringify(cart.items) === JSON.stringify(updatedCartItems),

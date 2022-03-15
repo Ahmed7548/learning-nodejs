@@ -11,7 +11,7 @@ exports.getUserProductDetail = getProductDetail(
 );
 
 exports.displayProducts = (req, res, next) => {
-	Product._getAllProducts()
+	Product.getAllProducts()
 		.then((products) => {
 			res.render("shop/index", {
 				products: products,
@@ -84,7 +84,6 @@ exports.showOrders = (req,res,next) => {
 	(async () => {
 		const user = req.user;
 		const orders = await user.getOrders()
-		console.log(orders)
 		console.log(orders, "orders")
 		res.render("shop/orders",{
 			 orders:orders,

@@ -6,7 +6,6 @@ exports.postProductToCart = (req, res, next) => {
 	const user = req.user;
 	console.log(user instanceof User)
 	const {id}=req.body
-	console.log(id)
 	user.addtoCart(id).then(_ => {
 		res.status(200).json({ status: 200 });
 	}).catch(err => {

@@ -1,5 +1,4 @@
 const Product = require("../models/product-data");
-const OrderItem= require("../models/order-item")
 const { getProductDetail } = require("./shared-handlers");
 
 

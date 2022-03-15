@@ -3,7 +3,7 @@ const mongodb = require("mongodb");
 const { MongoClient } = mongodb;
 
 const client = new MongoClient(
-	"mongodb+srv://Ahmed:ahmed%401234567@cluster0.8sjle.mongodb.net/shop?retryWrites=true&writeConcern=majority"
+	*********************************************
 );
 
 let _db;

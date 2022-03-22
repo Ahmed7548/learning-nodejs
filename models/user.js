@@ -1,27 +1,38 @@
-const { getDb } = require("../utils/data-base");
 const { ObjectId } = require("mongodb");
 const Product = require("./product-data");
+const mongoose = require("mongoose")
+// const cartSchema = new mongoose.Schema({
+// 	items: Array,
+// 	totalPrice:Number
+// })
+// const userSchema = new mongoose.Schema({
+// 	userName: String,
+// 	email: String,
+// 	cart:cartSchema
+// })
 
+
+// const user=mongoose.model("user",userSchema)
 class User {
-	constructor({userName, email, cart,_id}) {
-		this.userName = userName;
-        this.email = email;
-        this._id=_id
-		this.cart = cart;
+	constructor(userDoc) {
+		// this.userName = userName;
+        // this.email = email;
+        // this._id=_id
+		// this.cart = cart;
+		this.userDoc = userDoc 
 	}
 
 	async save() {
-		const db = getDb();
-		const users = await db.collection("users");
-		return await users.insertOne(this);
+		// const db = getDb();
+		// const users = await db.collection("users");
+		return await this.save();
 	}
 
-	async addtoCart(productId) {
-		const db = getDb();
-		const users = db.collection("users");
-		const product = await Product._getOneProduct(productId);
-		const cart = this.cart;
-		 cart.totalPrice += +product.price;
+	 async addtoCart(productId) {
+		const product = await Product.getOneProduct(productId);
+		const cart = this.userDoc.cart;
+		console.log(cart, "from user User")
+		const updatedTotalPrice=cart.totalPrice+(+product.price)
 
 		//get the product from the database
 		const productInCartIndex = cart.items.findIndex(
@@ -31,26 +42,29 @@ class User {
 		//if product in cart update product
 		if (productInCart) {
 			productInCart.qty += 1;
-			return await users.updateOne(
+			console.log(this.userDoc._id)
+			return await user.updateOne(
 				{
-					_id: new ObjectId(this._id),
+					_id: this.userDoc._id,
 					"cart.items._id": new ObjectId(productId),
 				},
 				{
 					$set: {
 						"cart.items.$": productInCart,
-						"cart.totalPrice": cart.totalPrice,
+						"cart.totalPrice": updatedTotalPrice,
 					},
 				}
 			);
 		}
 		// if new product
 		else {
-            const updatedProductInCart = { ...product, qty: 1 };
+            const updatedProductInCart = { ...product._doc, qty: 1 };
+			console.log(updatedProductInCart,"product")
+			
             cart.items.push(updatedProductInCart)
-            console.log(this,"user")
-			return await users.updateOne(
-				{ _id: new ObjectId(this._id) },
+			console.log(this.userDoc.id)
+			return await user.updateOne(
+				{ _id: this.userDoc._id },
 				{
 					$push: {
 						"cart.items": updatedProductInCart,
@@ -117,9 +131,10 @@ class User {
 	}
 
 	static async findById(id) {
-		const db = getDb();
-		const users = await db.collection("users");
-		return await users.findOne({ _id: new ObjectId(id) });
+		// const db = getDb();
+		// const users = await db.collection("users");
+		
+		// return await user.findOne({_id:ObjectId(id)});
     }
     
     async order() {

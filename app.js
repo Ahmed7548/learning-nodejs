@@ -6,8 +6,9 @@ const shopRoutes = require("./routes/shop");
 
 const app = express();
 const {errorController}= require("./controllers/errorPage-contraoller")
-const { mongoConnect } = require("./utils/data-base")
-const User =require("./models/user");
+const { connectToDataBase } = require("./utils/data-base")
+// const User = require("./models/user");
+const {User}=require("./models/mongooseUser")
 app.set("view engine", "ejs");
 app.set("views", "views"); //tells express the directory of templating engine
 
@@ -18,15 +19,15 @@ app.use(express.static(path.join(__dirname, "public")));
 //middle ware here must be before our routes so that it apply to them --order matters
 
 
-let user
+let user;
 app.use(async (req, res, next) => {
 	if (user) {
 		req.user = user
+		req.cart= user.cart
 	} else {
-		user = await User.findById("622511956b8ddc45623eb904")
-		user = new User(user)
-		req.user=user
-		console.log(user,"2")
+		user = await User.findById("6234a0932169ff4cc3007348")
+		req.user = user
+		req.cart= user.cart
 	}
 	next()
 })
@@ -37,7 +38,7 @@ app.get("/", errorController)
 
 
 
-mongoConnect(_ => {
+connectToDataBase(_ => {
 	app.listen(8080, () => {
 		console.log("app is running on port 8080")
 	})

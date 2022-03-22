@@ -1,12 +1,12 @@
 // const Product = require("../models/product-data");
 // const CartItem = require("../models/cart-item");
-const User= require("../models/user")
+const User= require("../models/mongooseUser")
 
 exports.postProductToCart = (req, res, next) => {
-	const user = req.user;
-	console.log(user instanceof User)
+	const user = req.user
+	// console.log(user instanceof User)
 	const {id}=req.body
-	user.addtoCart(id).then(_ => {
+	user.addToCart(id).then(_ => {
 		res.status(200).json({ status: 200 });
 	}).catch(err => {
 		console.log(err)
@@ -15,7 +15,7 @@ exports.postProductToCart = (req, res, next) => {
 
 exports.updateProductsInData = (req, res, next) => {
 	(async () => {
-			await req.user.updatedCart(req.body)
+			await req.user.updateCart(req.body)
 		try {
 			res.status(200).json({ status: 200 });
 		} catch (err) {
@@ -30,13 +30,15 @@ exports.deleteProduct = (req, res, next) => {
 	const deletedItems = cart.items.find(item => item._id.toHexString() === id)
 	const deletedProductTotalPrice = (+deletedItems.price) * (+deletedItems.qty);
 
+	const user= req.user
+
 
 	console.log(deletedItems, "deleteditem"); 
 	console.log(deletedProductTotalPrice, "sdasdsadasdas");
 	
 
 	(async () => {
-		await User.deleteProductFromCart(id,req.user._id,deletedProductTotalPrice)
+		await user.deleteProductFromCart(id)
 		try {
 			res.status(200).json({ status: 200 });
 		} catch (err) {

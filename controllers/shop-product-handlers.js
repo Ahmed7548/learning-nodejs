@@ -1,4 +1,5 @@
 const Product = require("../models/product-data");
+const Order = require("../models/order")
 const { getProductDetail } = require("./shared-handlers");
 
 
@@ -29,7 +30,7 @@ exports.displayProducts = (req, res, next) => {
 };
 
 exports.indexPage = (req, res, next) => {
-	Product._getAllProducts()
+	Product.getAllProducts()
 	.then((products) => {
 		res.render("shop/index", {
 			products: products,
@@ -49,6 +50,7 @@ exports.indexPage = (req, res, next) => {
 
 exports.displayCart = (req, res, next) => {
 	(async () => {
+		console.log(req.user)
 		const cart =  req.user.cart;
 		const products =  cart.items;
 		try {
@@ -56,7 +58,7 @@ exports.displayCart = (req, res, next) => {
 				products: products,
 				totalPrice:cart.totalPrice,
 				path: "cart",
-				docTitle: "Cart",
+				docTitle: "Cart", 
 				styles: ["/css/cart.css"],
 			});
 		} catch (err) {
@@ -82,10 +84,11 @@ exports.addOrderHandler = (req, res, next) => {
 exports.showOrders = (req,res,next) => {
 	(async () => {
 		const user = req.user;
-		const orders = await user.getOrders()
-		console.log(orders, "orders")
+		
+		const orders = await Order.getOrders(user._id)
+		
 		res.render("shop/orders",{
-			 orders:orders,
+			orders:orders,
 			path: "Orders",
 			docTitle: "Orders",
 		})

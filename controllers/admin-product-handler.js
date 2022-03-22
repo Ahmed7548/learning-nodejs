@@ -19,8 +19,9 @@ exports.postAddedProduct = (req, res, next) => {
 	const user= req.user
 	const { title, describtion, price, image_url } = req.body;
 	const product = new Product(title, price, describtion, image_url,user._id)
-		product.save()
-		.then(() => {
+		product.saveProduct()
+			.then(() => {
+			res.redirect("/admin/admin-products")
 		})
 			.catch((err) => {
 			console.log(err)
@@ -30,7 +31,8 @@ exports.postAddedProduct = (req, res, next) => {
 exports.postEdittedProduct = (req, res, next) => {
 	console.log(req.body);
 	const { title, price, describtion, image_url } = req.body;
-	const updatedProduct= new Product(title,price,describtion,image_url)
+	const updatedProduct = new Product(title, price, describtion, image_url)
+	console.log(updatedProduct)
 	const id = req.params.id;
 	updatedProduct.UpdateProduct(id)
 		.then((result) => {
